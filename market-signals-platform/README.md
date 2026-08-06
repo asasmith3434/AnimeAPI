@@ -66,3 +66,4 @@ Run tests with `pip install pytest && python -m pytest tests/ -v`.
 - [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) — what data exists, where to get it, and what it costs
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — how the system fits together
 - [docs/ROADMAP.md](docs/ROADMAP.md) — build order and milestones
+- [docs/MULTI_DATASET_BLENDS.md](docs/MULTI_DATASET_BLENDS.md) — institutional signal-blend playbooks (SAR+IoT, patents+GitHub, jet tracking+flows) mapped to our tiers
