@@ -68,6 +68,7 @@ Candidates, gated on Phase 3 evidence and interest:
 - **Regulatory expansions:** openFDA + ClinicalTrials.gov (biotech), FCC ECFS (new device certifications).
 - **Supply-chain graph:** curated ecosystems first (e.g., AI/semis: NVDA→TSMC→ASML→suppliers), then NLP extraction of customer-concentration language from 10-Ks; bills-of-lading data (ImportGenius) only if the graph proves useful.
 - **OSINT depth:** Certificate Transparency monitoring, package-registry releases, domain registrations for tracked companies.
+- **Named signal blends** (see [MULTI_DATASET_BLENDS.md](MULTI_DATASET_BLENDS.md)): LLM novelty scoring of patent claims to power the patents+GitHub "tech-adoption" blend; corporate jet tracking (OpenSky/adsb.fi + FAA registry entity resolution) paired with 8-K M&A labels; EIA grid-anomaly signals as the free half of the SAR+telemetry blend.
 
 ## Phase 5 — Scale & polish (as needed)
 

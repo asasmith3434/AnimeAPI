@@ -16,7 +16,7 @@ This platform ingests many independent signal streams, resolves them to a common
 4. **Correlates** signals across datasets and detects convergence events.
 5. **Alerts** the user when convergence crosses a threshold, with full provenance (every underlying data point linked to its source).
 
-## Repository Layout (planned)
+## Repository Layout
 
 ```
 market-signals-platform/
@@ -25,13 +25,34 @@ market-signals-platform/
 │   ├── DATA_SOURCES.md        # All 20 signal areas mapped to concrete sources, cost, and feasibility
 │   ├── ARCHITECTURE.md        # System design: ingestion, entity graph, scoring, correlation, alerting
 │   └── ROADMAP.md             # Phased build plan, starting with free data sources
-├── ingest/                    # One connector per data source
-├── entities/                  # Entity resolution (company names → tickers → CIKs → relationships)
-├── signals/                   # Signal scoring and normalization
-├── correlation/               # Convergence detection engine
-├── api/                       # Backend API
-└── web/                       # Dashboard UI
+├── msp/                       # Python package (Phase 0)
+│   ├── config.py              # Env-driven settings (DB URL, SEC user agent)
+│   ├── db.py                  # SQLAlchemy models: companies, raw_events, insider_transactions, signals
+│   ├── entities.py            # Company loader (SEC CIK<->ticker mapping)
+│   ├── ingest/
+│   │   ├── edgar.py           # Rate-limited EDGAR HTTP client
+│   │   └── form4.py           # Form 4 (insider transactions) connector
+│   ├── signals/
+│   │   └── insider_cluster.py # Cluster-buy detection
+│   └── cli.py                 # Command-line interface
+└── tests/
 ```
+
+## Quick Start (Phase 0)
+
+```bash
+cd market-signals-platform
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+python -m msp.cli init-db
+python -m msp.cli load-companies          # ~10k companies from SEC's free mapping
+python -m msp.cli ingest-form4 --days-back 7   # pull a week of insider filings
+python -m msp.cli detect-clusters              # store cluster-buy signals
+python -m msp.cli report                       # print current cluster buys
+```
+
+Run tests with `pip install pytest && python -m pytest tests/ -v`.
 
 ## Guiding Principles
 
@@ -45,3 +66,4 @@ market-signals-platform/
 - [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) — what data exists, where to get it, and what it costs
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — how the system fits together
 - [docs/ROADMAP.md](docs/ROADMAP.md) — build order and milestones
+- [docs/MULTI_DATASET_BLENDS.md](docs/MULTI_DATASET_BLENDS.md) — institutional signal-blend playbooks (SAR+IoT, patents+GitHub, jet tracking+flows) mapped to our tiers

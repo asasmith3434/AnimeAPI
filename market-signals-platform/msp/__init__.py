@@ -1,0 +1,1 @@
+"""Market Signals Platform."""
