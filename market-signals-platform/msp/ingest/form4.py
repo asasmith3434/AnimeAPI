@@ -184,13 +184,17 @@ def parse_form4(xml_text: str) -> ParsedForm4:
 
 
 def fetch_index_entries(client: EdgarClient, day: date) -> list[IndexEntry]:
-    """Form 4 entries from the daily index; empty on weekends/holidays (404)."""
+    """Form 4 entries from the daily index.
+
+    Empty on weekends/holidays: SEC serves 403 (CloudFront) or 404 for
+    dates with no index file.
+    """
     import requests
 
     try:
         text = client.get_text(daily_index_url(day))
     except requests.HTTPError as exc:
-        if exc.response is not None and exc.response.status_code == 404:
+        if exc.response is not None and exc.response.status_code in (403, 404):
             return []
         raise
     return parse_daily_index(text)

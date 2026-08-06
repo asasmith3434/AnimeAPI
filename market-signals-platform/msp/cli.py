@@ -48,9 +48,17 @@ def ingest_form4_cmd(date_str, days_back, limit):
         today = date.today()
         days = [today - timedelta(days=i) for i in range(days_back)]
 
+    failures = 0
     for day in sorted(days):
-        stats = form4.ingest_day(day, limit=limit)
+        try:
+            stats = form4.ingest_day(day, limit=limit)
+        except Exception as exc:  # one bad day shouldn't kill a backfill
+            failures += 1
+            click.echo(f"{day}: FAILED ({exc})", err=True)
+            continue
         click.echo(f"{day}: {stats}")
+    if failures:
+        raise SystemExit(1)
 
 
 @cli.command("detect-clusters")
